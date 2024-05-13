@@ -1,0 +1,27 @@
+.display-4 {
+    font-size: calc(1.475rem + 2.7vw) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    color: #81c408 !important;
+}
+.img-fluid {
+    height: 150px !important;
+    width: 80% !important;
+    margin-top: 0% !important;
+}
+.image-fluid {
+    height: 80px !important;
+    width: 80% !important;
+    margin-top: 0% !important;
+}
+.box-shadow {
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2), 0 4px 15px 0 rgba(0, 0, 0, 0.19);
+}
+/* .custom-dropdown-menu {
+    left: auto; 
+    right: 100%; 
+    margin-right: 10px; 
+} */
+.dropdown-menu{
+    width:550%
+}
