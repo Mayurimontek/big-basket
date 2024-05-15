@@ -22,7 +22,7 @@ const Login = () => {
     const handleLogin = () => {
         if (validate()) {
             try {
-                debugger
+                
                 getData('GetAllCustomer').then(result => {
                     const users = result;
                     const allUsers = users.flat();

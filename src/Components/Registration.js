@@ -24,7 +24,7 @@ const Registration = () => {
     }
     const register =()=>{
         try {
-            debugger
+            
             postData('RegisterCustomer',registerObj).then(result=>{
                 if(result!=undefined){
                     toast.success('Registration successfull...!');

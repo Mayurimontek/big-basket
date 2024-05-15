@@ -4,7 +4,7 @@ import { showProject,getProjectById,deleteProject } from '../Features/projectDet
 import { useNavigate } from 'react-router-dom';
 
 const ProjectList = () => {
-    debugger
+    
     const dispatch=useDispatch();
     const navigate = useNavigate();
     const project = useSelector((state)=>state.app.projects);

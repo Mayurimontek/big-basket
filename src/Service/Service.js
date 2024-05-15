@@ -11,7 +11,7 @@ const getData = async (endpoint) => {
 }
 const postData =async(endpoint,obj)=>{
     try {
-        debugger
+        
        const result = await axios.post(`${URL}${endpoint}`,obj);
        return result.data; 
     } catch (error) {
@@ -20,11 +20,20 @@ const postData =async(endpoint,obj)=>{
 }
 const getDataById=async(endpoint)=>{
     try {
-        
         const result = await axios.get(`${URL}${endpoint}`);
         return result.data.data;
     } catch (error) {
         alert(error);
     }
 }
-export{getData,postData,getDataById}
+const deleteData =async(endpoint)=>{
+    
+    try {
+        const result = await axios.get(`${URL}${endpoint}`);
+        
+        return result.data;
+    } catch (error) {
+        alert(error);
+    }
+}
+export{getData,postData,getDataById,deleteData}

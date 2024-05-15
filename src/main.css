@@ -25,3 +25,12 @@
 .dropdown-menu{
     width:550%
 }
+.dropdown-divider {
+    margin: 0.5rem 0;
+    border: 0.5px solid rgba(0, 0, 0, 0.1); /* Adjust thickness and color as needed */
+    
+  }
+  .error {
+    color: red;
+  }
+  

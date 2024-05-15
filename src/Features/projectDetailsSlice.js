@@ -16,7 +16,7 @@ export const createProject = createAsyncThunk("createProject", async (data, { re
     }
 });
 export const updateProject = createAsyncThunk("updateProject", async (data, { rejectWithValue }) => {
-    debugger
+    
     try {
         const response = await fetch('https://onlinetestapi.gerasim.in/api/Glitch/UpdateProject', {
             method: "POST",
@@ -25,7 +25,7 @@ export const updateProject = createAsyncThunk("updateProject", async (data, { re
             },
             body: JSON.stringify(data)
         });
-        debugger
+        
         const result = await response.json();
         return result;
     } catch (error) {

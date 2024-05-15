@@ -7,14 +7,14 @@ import { MyContext } from '../MycontextProviders';
 import { useNavigate } from 'react-router-dom';
 import { setcartProductListByCust } from '../Features/CartSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
-const CheckOut = () => {
+const CheckOut = ({ setShowNavbar }) => {
     const { loggedUserData, updateLoggedUserData } = useContext(MyContext);
     const [totalQuantity, setTotalQuantity] = useState(0);
     const customerId = loggedUserData.custId;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const cartProductListByCustomer = useSelector((state) => state.cartProduct.cartProductListByCust);
-    const [placeOrderObj, setplaceOrderObj] = useState({
+    const [formData, setFormData] = useState({
         "saleId": 0,
         "custId": 0,
         "saleDate": "",
@@ -27,22 +27,46 @@ const CheckOut = () => {
         "deliveryPinCode": "",
         "deliveryLandMark": "",
         "isCanceled": true
-    })
-    const getCartProductListbyCustId = async (customerId) => {
-
-        try {
-            const result = await getDataById(`GetCartProductsByCustomerId?id=${customerId}`);
-            if (result !== undefined) {
-
-                dispatch(setcartProductListByCust(result));
-            } else {
-                toast.error('Error in fetching cart Products');
-            }
-        } catch (error) {
-            alert(error);
+    });
+    const [errors, setErrors] = useState({});
+    const ValidateForm = () => {
+        const errors = {};
+        if (!formData.deliveryAddress1) {
+            errors.deliveryAddress1 = "Address1 is required";
         }
+        if (!formData.deliveryAddress2) {
+            errors.deliveryAddress2 = "Address2 is required";
+        }
+        if (!formData.deliveryCity) {
+            errors.deliveryCity = "City is required";
+        }
+        if (!formData.deliveryLandMark) {
+            errors.deliveryLandMark = "LandMark is required";
+        }
+        if (!formData.deliveryPinCode) {
+            errors.deliveryPinCode = "Pincode is required";
+        }
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
     }
+    // const getCartProductListbyCustId = async (customerId) => {
 
+    //     try {
+    //         const result = await getDataById(`GetCartProductsByCustomerId?id=${customerId}`);
+    //         if (result !== undefined) {
+
+    //             dispatch(setcartProductListByCust(result));
+    //         } else {
+    //             toast.error('Error in fetching cart Products');
+    //         }
+    //     } catch (error) {
+    //         alert(error);
+    //     }
+    // }
+    useEffect(() => {
+        setShowNavbar(false);
+        return () => setShowNavbar(true);
+    }, [setShowNavbar]);
     useEffect(() => {
         let total = 0;
         cartProductListByCustomer.forEach(item => {
@@ -52,10 +76,10 @@ const CheckOut = () => {
     }, [cartProductListByCustomer]);
 
     useEffect(() => {
-        getCartProductListbyCustId(customerId);
+        // getCartProductListbyCustId(customerId);
     }, []);
     const resetObj = () => (
-        setplaceOrderObj({
+        setFormData({
             "saleId": 0,
             "custId": 0,
             "saleDate": "",
@@ -73,7 +97,7 @@ const CheckOut = () => {
     const totalInvoiceAmount = cartProductListByCustomer.reduce((total, item) => total + item.productPrice * item.quantity, 0).toFixed(2)
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setplaceOrderObj((prevObj) => ({
+        setFormData((prevObj) => ({
             ...prevObj,
             custId: customerId,
             saleDate: new Date(),
@@ -83,21 +107,29 @@ const CheckOut = () => {
             [name]: value
         }))
     }
-    const placeOrder = async () => {
+    const placeOrder = async (e) => {
         try {
-            debugger
-            postData('PlaceOrder', placeOrderObj).then(result => {
-                if (result != undefined) {
-                    debugger
-                    toast.success('Order Placed...!');
-                    resetObj();
-                    navigate("/Product");
-                }
-                else {
-                    toast.alert('Error in placing order');
-                    resetObj();
-                }
-            });
+            
+            e.preventDefault();
+            if(ValidateForm()){
+                postData('PlaceOrder', formData).then(result => {
+                    if (result != undefined) {
+    
+                        toast.success('Order Placed...!');
+                        resetObj();
+                        navigate("/Product");
+    
+                    }
+                    else {
+                        toast.alert('Error in placing order');
+                        resetObj();
+                    }
+                });
+            }
+            else{
+                console.error('Form has errors:', errors);
+            }
+           
 
         } catch (error) {
             alert(error);
@@ -258,31 +290,39 @@ const CheckOut = () => {
                                 <div className="card-header bg-danger bg-opacity-25">
                                     <h4>Billing Address</h4>
                                 </div>
-                                <div className="card-body mb-5">
+                                <form onSubmit={placeOrder}>
+                                    <div className="card-body mb-5">
 
-                                    <div className="row">
+                                        <div className="row">
 
-                                        <div className="col-lg-6 col-md-6">
-                                            <input type="text" placeholder="City " className="form-control m-2" name="deliveryCity" onChange={handleChange} />
-                                        </div>
-                                        <div className="col-lg-6 col-md-6">
-                                            <input type="text" placeholder="Pincode " className="form-control m-2" name="deliveryPinCode" onChange={handleChange} />
-                                        </div>
-                                        <div className="col-lg-6 col-md-6">
-                                            <textarea placeholder="Address Line 1 " className="form-control m-2" rows="3" name="deliveryAddress1" onChange={handleChange}></textarea>
-                                        </div>
-                                        <div className="col-lg-6 col-md-6">
-                                            <textarea placeholder="Address Line  2" className="form-control m-2" rows="3" name="deliveryAddress2" onChange={handleChange}></textarea>
-                                        </div>
-                                        <div className="col-lg-6 col-md-6">
-                                            <textarea placeholder="Landmark" className="form-control m-2" rows="3" name="deliveryLandMark" onChange={handleChange}></textarea>
-                                        </div>
+                                            <div className="col-lg-6 col-md-6">
+                                                <input type="text" placeholder="City "  className="form-control m-2" name="deliveryCity" value={formData.deliveryCity} onChange={handleChange} />
+                                                {errors.deliveryCity && <span className="error">{errors.deliveryCity}</span>}
+                                            </div>
+                                            <div className="col-lg-6 col-md-6">
+                                                <input type="text" placeholder="Pincode " className="form-control m-2" name="deliveryPinCode" value={formData.deliveryPinCode} onChange={handleChange} />
+                                                {errors.deliveryPinCode && <span className="error">{errors.deliveryPinCode}</span>}
+                                            </div>
+                                            <div className="col-lg-6 col-md-6">
+                                                <textarea placeholder="Address Line 1 " className="form-control m-2" rows="3" name="deliveryAddress1" value={formData.deliveryAddress1} onChange={handleChange}></textarea>
+                                                {errors.deliveryAddress1 && <span className="error">{errors.deliveryAddress1}</span>}
+                                            </div>
+                                            <div className="col-lg-6 col-md-6">
+                                                <textarea placeholder="Address Line  2" className="form-control m-2" rows="3" name="deliveryAddress2" value={formData.deliveryAddress2} onChange={handleChange}></textarea>
+                                                {errors.deliveryAddress2 && <span className="error">{errors.deliveryAddress2}</span>}
+                                            </div>
+                                            <div className="col-lg-6 col-md-6">
+                                                <textarea placeholder="Landmark" className="form-control m-2" rows="3" name="deliveryLandMark" value={formData.deliveryLandMark} onChange={handleChange}></textarea>
+                                                {errors.deliveryLandMark && <span className="error">{errors.deliveryLandMark}</span>}
+                                            </div>
 
 
+
+                                        </div>
 
                                     </div>
+                                </form>
 
-                                </div>
                             </div>
                         </div>
 
