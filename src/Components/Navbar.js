@@ -30,7 +30,7 @@ const Navbar = () => {
         if (result !== undefined) {
           setAllCategory(result);
         } else {
-          toast.alert('Error in fetching Categories');
+          toast.error('Error in fetching Categories');
         }
       })
     } catch (error) {
@@ -95,7 +95,7 @@ const Navbar = () => {
           dispatch(setProductByCategory(result));
           dispatch(setSelectedCategoryId(categoryId));
         } else {
-          toast.alert('Error in fetching products by category');
+          toast.error('Error in fetching products by category');
         }
       })
     } catch (error) {

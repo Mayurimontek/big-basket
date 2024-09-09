@@ -121,7 +121,7 @@ const CheckOut = ({ setShowNavbar }) => {
     
                     }
                     else {
-                        toast.alert('Error in placing order');
+                        toast.error('Error in placing order');
                         resetObj();
                     }
                 });

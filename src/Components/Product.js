@@ -57,7 +57,7 @@ const Product = () => {
                 if (result != undefined) {
                     toast.success(result.message);
                 } else {
-                    toast.alert(result.message);
+                    toast.error(result.message);
                 }
             });
         } catch (error) {

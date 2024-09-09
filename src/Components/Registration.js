@@ -32,7 +32,7 @@ const Registration = () => {
                     navigate("/");
                 }
                 else{
-                    toast.alert('Registration failed...!');
+                    toast.error('Registration failed...!');
                 }
             });
         } catch (error) {
